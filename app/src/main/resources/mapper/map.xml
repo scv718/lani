@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ 	@FileName    : sample-mapper.java
+	@Date        : 2021. 06. 25.
+ 	@Author      : nbware
+ 	@Description : Sample Query Mapper xml
+ 	@History     :
+ -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lani.dao.MapDataDao">
+
+	<select id ="selectListData" resultType = "com.lani.response.ResponseMapData">
+		select date, location, title from date_data
+	</select>
+
+	<insert id = "insertMapData">
+		insert into date_data
+		values (
+			"#{date}","#{location}","#{title}"
+		)
+	</insert>
+
+</mapper>
