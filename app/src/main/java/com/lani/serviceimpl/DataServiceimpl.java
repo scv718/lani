@@ -12,8 +12,8 @@ import com.lani.service.DataService;
 public class DataServiceimpl implements DataService{
 
 
-	@Autowired
-	MapDataDao dataDao;
+//	@Autowired(required = true)
+//	MapDataDao dataDao;
 
 
 	@Override
@@ -24,8 +24,8 @@ public class DataServiceimpl implements DataService{
 
 	@Override
 	public void addMapData(RequestMapData mapData) {
-
-
+		
+//		dataDao.addData(mapData);
 
 	}
 
