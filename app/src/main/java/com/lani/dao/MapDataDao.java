@@ -6,11 +6,10 @@ import com.lani.response.ResponseMapData;
 
 public interface MapDataDao {
 
-
 	/*
 	 * 데이트 추가
 	 */
-	public void addData(RequestMapData data);
+	public void insertMapData(RequestMapData data);
 
 
 	//////////////////

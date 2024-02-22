@@ -25,7 +25,7 @@ public class DataServiceimpl implements DataService{
 	@Override
 	public void addMapData(RequestMapData mapData) {
 
-
+		System.out.println(mapData);
 
 	}
 
