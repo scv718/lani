@@ -2,19 +2,6 @@
   <div>
     <!-- 네이버 지도 표시 영역 -->
     <div id="map" style="width: 100%; height: 400px;"></div>
-
-    <!-- 마커 추가 버튼 -->
-    <button @click="togglePopup">테스트</button>
-
-    <!-- 팝업 -->
-    <div v-if="isPopupOpen" class="popup">
-      <!-- 팝업 내용 -->
-      <input type="text" placeholder="네이버지도 링크 입력" v-model="naverMapLink">
-      <br>
-      <input type="text" placeholder="제목 입력" v-model="markerTitle">
-      <button @click="sendMapData">마커 추가하기</button>
-      <!-- 여기에 팝업 내용을 추가하세요 -->
-    </div>
   </div>
 </template>
 
@@ -25,36 +12,80 @@ export default {
   mounted() {
     // 네이버 지도 초기화
     var mapOptions = {
-      center: new naver.maps.LatLng(37.3595704, 127.105399),
-      zoom: 10
+      center: new naver.maps.LatLng(37.50339678708366, 126.94865788475123),
+      zoom: 12,
+      mapTypes: new naver.maps.MapTypeRegistry({
+        'normal': naver.maps.NaverStyleMapTypeOptions.getNormalMap(
+          {
+            overlayType: 'bg.lko.ol' // 네이버 지도 오버레이 부분
+          }
+        )
+      })
     };
-    var map = new naver.maps.Map('map', mapOptions);
+    this.map = new naver.maps.Map('map', mapOptions);
+
+    // 페이지가 로드될 때 리스트를 가져와서 마커 생성
+    this.fetchAndPlaceMarkers();
   },
   data() {
     return {
-      isPopupOpen: false,
-      naverMapLink: '', // naverMapLink 속성 추가
-      markerTitle: ''   // markerTitle 속성 추가
+      map: null
     };
   },
   methods: {
-    togglePopup() {
-      // 팝업을 열거나 닫습니다.
-      this.isPopupOpen = !this.isPopupOpen;
-    },
-    async sendMapData() {
-      // axios를 사용하여 HTTP POST 요청 보내기
+    async fetchAndPlaceMarkers() {
       try {
-        const response = await axios.post('http://localhost:8080/addMap', {
-          naverMapLink: this.naverMapLink,
-          markerTitle: this.markerTitle
-        }, { withCredentials: true });
-        console.log('응답:', response.data);
-        this.isPopupOpen = false; // 요청이 성공하면 팝업을 닫습니다.
+        // Axios를 사용하여 서버에서 리스트 가져오기
+        const response = await axios.get('http://localhost:8099/map');
+        const list = response.data; // 가져온 리스트
+        // 리스트의 각 항목에 대해 마커 생성
+        list.forEach(item => {
+          const marker = new naver.maps.Marker({
+            position: new naver.maps.LatLng(item.point_y, item.point_x),
+            map: this.map
+          });
+          // 마커에 대한 이벤트 리스너 등을 설정할 수 있음
+          this.fetchAndDrawPolyline();
+        });
       } catch (error) {
-        console.error('에러:', error);
-        // 요청이 실패했을 때 에러 처리
+        console.error('리스트 가져오기 에러:', error);
       }
+    },
+    // fetchAndPlaceMarkers 메소드 뒤에 추가
+    async fetchAndDrawPolyline() {
+      try {
+        // Axios를 사용하여 서버에서 리스트 가져오기
+        const response = await axios.get('http://localhost:8099/map');
+        const list = response.data; // 가져온 리스트
+
+        // 서로 연결될 선의 좌표를 담을 배열
+        const polylinePositions = [];
+
+        // 리스트의 각 항목에 대해 위치 정보를 배열에 추가
+        list.forEach(item => {
+          const position = new naver.maps.LatLng(item.point_y, item.point_x);
+          polylinePositions.push(position);
+        });
+
+        // Polyline 생성
+        const polyline = new naver.maps.Polyline({
+          map: this.map, // 지도 객체
+          path: polylinePositions, // Polyline을 이루는 위치 정보
+          strokeColor: '#FF0000', // 선 색상
+          strokeWeight: 2, // 선 두께
+          strokeOpacity: 0.7 // 선 투명도
+        });
+      } catch (error) {
+        console.error('위치 정보 가져오기 에러:', error);
+      }
+    },
+    // 테스트용
+    createFixedMarker() {
+      const markerOptions = {
+        position: new naver.maps.LatLng(37.50339678708366, 126.94865788475123),
+        map: this.map
+      };
+      const marker = new naver.maps.Marker(markerOptions);
     }
   }
 }
@@ -74,3 +105,18 @@ export default {
   z-index: 9999;
 }
 </style>
+// Polyline을 이루는 위치 정보 배열에 추가
+polylinePositions.push(position);
+});
+
+// Polyline 생성
+const polyline = new naver.maps.Polyline({
+map: this.map, // 지도 객체
+path: polylinePositions, // Polyline을 이루는 위치 정보
+strokeColor: '#FF0000', // 선 색상
+strokeWeight: 2, // 선 두께
+strokeOpacity: 0.7 // 선 투명도
+});
+} catch (error) {
+console.error('위치 정보 가져오기 에러:', error);
+}

@@ -1,5 +1,7 @@
 package com.lani.serviceimpl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,21 +14,21 @@ import com.lani.service.DataService;
 public class DataServiceimpl implements DataService{
 
 
-//	@Autowired(required = true)
-//	MapDataDao dataDao;
+	@Autowired(required = true)
+	MapDataDao dataDao;
 
 
 	@Override
-	public ResponseMapData sendMapData() {
+	public List<ResponseMapData> sendMapData() {
 
-		return null;
+
+		return dataDao.selectListData();
 	}
 
 	@Override
 	public void addMapData(RequestMapData mapData) {
-		
-//		dataDao.addData(mapData);
 
+		dataDao.insertMapData(mapData);
 	}
 
 

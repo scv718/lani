@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lani.dao.MapDataDao">
+
+	<select id ="selectListData" resultType = "com.lani.response.ResponseMapData">
+		select date, title, point_x, point_y from date_data
+	</select>
+
+	<insert id="insertMapData">
+	    INSERT INTO date_data (date, title, point_x, point_y)
+	    VALUES (#{date} ,#{title},  #{point_x},#{point_y})
+	</insert>
+
+
+</mapper>
