@@ -10,6 +10,7 @@ public class ResponseMapData {
 	String date;
 	String location;
 	String title;
+	String store;
 	String point_x;
 	String point_y;
 	MultipartFile file;

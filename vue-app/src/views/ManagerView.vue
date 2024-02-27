@@ -9,11 +9,12 @@
       <!-- 팝업 -->
       <div v-if="isPopupOpen" class="popup">
         <!-- 팝업 내용 -->
+        <input type="text" placeholder="장소이름 입력" v-model="store">
         <input type="text" placeholder="날짜 입력" v-model="date">
   
         <input type="text" placeholder="주소 입력" v-model="location">
   
-        <input type="text" placeholder="이름 입력" v-model="title">
+        <input type="text" placeholder="제목 입력" v-model="title">
         <input type="file" @change="onFileChange" accept="image/*">
         <button @click="sendMapData">마커 추가하기</button>
         <!-- 여기에 팝업 내용을 추가하세요 -->

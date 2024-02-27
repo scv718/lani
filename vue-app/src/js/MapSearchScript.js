@@ -7,8 +7,9 @@ export default {
       date: '',
       // location: '',
       pointX: '',
-      poinyY: '',
+      pointY: '',
       title: '',
+      store: '',
     };
   },
   methods: {
@@ -29,7 +30,8 @@ export default {
           // location: this.location,
           point_x: x,
           point_y: y,
-          title: this.title
+          title: this.title,
+          store: this.store
         }, { withCredentials: true });
         console.log('응답:', response.data);
         this.isPopupOpen = false; // 요청 성공 시 팝업 close

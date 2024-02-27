@@ -9,6 +9,7 @@ public class RequestMapData {
 
 	String date;
 	String location;
+	String store;
 	String title;
 	String point_x;
 	String point_y;
