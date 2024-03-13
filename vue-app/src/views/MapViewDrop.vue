@@ -1,22 +1,29 @@
 <template>
   <div>
-    <!-- 네이버 지도 표시 영역 -->
-    <div id="map" style="width: 100%; height: 400px; position: relative; z-index: 100;"></div>
+    <button @click="toggleDropdown" style="position: absolute; top: 10px; left: 10px; z-index: 101;">
+      드롭다운테스트
+    </button>
 
-    <!-- 가로 슬라이드 패널 -->
-    <div class="slidePanel">
-      <div class="itemsContainer">
-        <div v-for="(item, date) in listData" :key="date" class="item">
-          <div v-for="(value, index) in item" :key="index">
-            <div>
+    <!-- 드롭다운 내용 -->
+    <div v-if="showDropdown" class="dropDownMenu"
+      style="position: absolute; top: 40px; left: 10px; background-color: white; z-index: 102; background-color: transparent; font-size: 12px;">
+      <div v-for="(item, date) in listData" :key="date" @click="togglePolylineVisibility(date)"
+        style="padding: 10px; cursor: pointer;">
+        <div v-for="(value, index) in item" :key="index" @click="togglePolylineVisibility(date)"
+          style="padding: 10px; cursor: pointer;">
+          <div style="padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; background-color: lightpink;">
             <p><strong>Date:</strong> {{ value.date }}</p>
             <p><strong></strong> {{ value.title }}</p>
-            <p><strong>Store:</strong> {{ value.store }}</p>  
-          </div>
+            <p><strong>Store:</strong> {{ value.store }}</p>
           </div>
         </div>
+        <!-- 다른 속성들도 필요한 경우 추가 -->
       </div>
     </div>
+
+    <!-- 네이버 지도 표시 영역 -->
+    <div id="map" style="width: 100%; height: 400px; position: absolute; top: 0; left: 0; z-index: 100;"></div>
+
   </div>
 </template>
 
@@ -121,25 +128,4 @@ export default {
 
 </script>
 
-<style scoped>
-.slidePanel {
-  background-color: #fff; /* 배경색 지정 */
-  overflow-x: auto; /* 가로 스크롤 활성화 */
-  white-space: nowrap; /* 내용을 가로로 배열 */
-  position: absolute;
-  top: 400px;
-  left: 0;
-  right: 0;
-  z-index: 103;
-}
-
-.itemsContainer {
-  display: flex; /* Flexbox를 사용하여 항목을 가로로 배열 */
-  overflow-x: auto; /* 컨테이너 내부에서 항목이 넘칠 경우 가로 스크롤 허용 */
-}
-
-.item {
-  flex: 0 0 auto; /* 각 항목이 컨텐츠 크기에 맞게 유연하게 배열되도록 설정 */
-  margin-right: 20px; /* 항목 사이의 간격 */
-}
-</style>
+ 
