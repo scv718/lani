@@ -6,12 +6,17 @@
 
 <mapper namespace="com.lani.dao.MapDataDao">
 
+
+	<select id ="selectCountData" resultType="int">
+		select count(date) from date_data
+	</select>
+
 	<select id ="selectListData" resultType = "com.lani.response.ResponseMapData">
-		select date, title, store,point_x, point_y from date_data
+		select date, title, store ,point_x, point_y from date_data
 	</select>
 
 	<insert id="insertMapData">
-	    INSERT INTO date_data (date, store,title, point_x, point_y)
+	    INSERT INTO date_data (date, title, store, point_x, point_y)
 	    VALUES (#{date} , #{title},  #{store}, #{point_x},#{point_y})
 	</insert>
 

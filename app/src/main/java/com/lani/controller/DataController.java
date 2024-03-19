@@ -7,14 +7,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lani.code.ResponseCode;
 import com.lani.request.RequestMapData;
 import com.lani.response.ResponseMapData;
 import com.lani.response.RestResponse;
 import com.lani.service.DataService;
+import com.lani.service.FileService;
 import com.lani.util.CheckUtil;
 
 @RestController
@@ -25,6 +28,8 @@ public class DataController {
 	@Autowired
 	DataService dataService;
 
+	@Autowired
+	FileService fileServie;
 //	@Autowired
 //	CheckUtil checkUtil;
 
@@ -58,17 +63,20 @@ public class DataController {
 
 
 	@PostMapping("/addMap")
-	public RestResponse addMap(@RequestBody RequestMapData mapVo) {
+	public RestResponse addMap(@RequestParam("data") String jsonData, @RequestParam("file") MultipartFile file) {
 
 //		if(mapVo.getLocation() == null || mapVo.getTitle() == null) {
 //			log.debug("params Check : {}", mapVo);
 //			return new RestResponse(false, ResponseCode.C900);
 //		}
-
 		try {
 
-			System.out.println(mapVo);
-			dataService.addMapData(mapVo);
+			ObjectMapper objectMapper = new ObjectMapper();
+			RequestMapData mapVo = objectMapper.readValue(jsonData, RequestMapData.class);
+			if(fileServie.uploadFile(mapVo, file)) {
+				dataService.addMapData(mapVo);
+			}
+
 		}catch (Exception e) {
 			e.printStackTrace();
 			return new RestResponse(false, ResponseCode.C900);

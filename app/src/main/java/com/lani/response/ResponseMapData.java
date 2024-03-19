@@ -13,6 +13,7 @@ public class ResponseMapData {
 	String store;
 	String point_x;
 	String point_y;
+	String filePath;
 	MultipartFile file;
 
 }

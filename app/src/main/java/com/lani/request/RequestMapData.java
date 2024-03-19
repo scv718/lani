@@ -13,6 +13,6 @@ public class RequestMapData {
 	String title;
 	String point_x;
 	String point_y;
-	MultipartFile file;
+//	MultipartFile file;
 
 }

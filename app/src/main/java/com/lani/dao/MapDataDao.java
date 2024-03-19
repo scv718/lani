@@ -21,4 +21,10 @@ public interface MapDataDao {
 	 * 전체 뿌려주는 쿼리
 	 */
 	public List<ResponseMapData> selectListData();
+
+	/*
+	 * 카운트
+	 */
+
+	public int selectCountData();
 }

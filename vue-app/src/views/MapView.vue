@@ -1,17 +1,19 @@
 <template>
-  <div>
+  <div style="display : grid">
     <!-- 네이버 지도 표시 영역 -->
-    <div id="map" style="width: 100%; height: 400px; position: relative; z-index: 100;"></div>
+    <div id="map" class="map"></div>
 
     <!-- 가로 슬라이드 패널 -->
     <div class="slidePanel">
       <div class="itemsContainer">
         <div v-for="(item, date) in listData" :key="date" class="item">
-          <div v-for="(value, index) in item" :key="index">
-            <div>
-            <p><strong>Date:</strong> {{ value.date }}</p>
+          <div v-for="(value, index) in item" :key="index" class="card" @mouseenter="pauseAnimation"
+            @mouseleave="resumeAnimation">
+            <img :src="getImagePath(value.filePath)" alt="Image" class="cardImg">
+            <div class = 'textBox'>
             <p><strong></strong> {{ value.title }}</p>
-            <p><strong>Store:</strong> {{ value.store }}</p>  
+            <p><strong></strong> {{ value.date }}</p>
+            <p><strong></strong> {{ value.store }}</p>
           </div>
           </div>
         </div>
@@ -38,14 +40,35 @@ export default {
     this.fetchAndPlaceMarkers();
   },
   methods: {
+    pauseAnimation() {
+      // '.item' 클래스를 가진 모든 요소 선택
+      const items = document.querySelectorAll('.item');
+      // 각 항목의 애니메이션 일시 중지
+      items.forEach(item => {
+        item.style.animationPlayState = 'paused';
+      });
+    },
+    resumeAnimation() {
+      // '.item' 클래스를 가진 모든 요소 선택
+      const items = document.querySelectorAll('.item');
+      // 각 항목의 애니메이션 재생
+      items.forEach(item => {
+        item.style.animationPlayState = 'running';
+      });
+    },
+    getImagePath(path) {
+      // 이미지 파일명을 동적으로 생성하여 반환합니다.
+      // return `C:\\workspace\\lani\\vue-app\\public\\img\\${path}`;
+      return `/img/${path}`;
+    },
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
       console.log(this.listData)
     },
     initMap() {
       const mapOptions = {
-        center: new naver.maps.LatLng(37.50339678708366, 126.94865788475123),
-        zoom: 12,
+        center: new naver.maps.LatLng(37.5046658, 126.9387444),
+        zoom: 10,
       };
       this.map = new naver.maps.Map('map', mapOptions);
     },
@@ -122,24 +145,90 @@ export default {
 </script>
 
 <style scoped>
+body {
+  height: 100%;
+}
+
+.map {
+  width: 60%;
+  height: 330px;
+  position: relative;
+  z-index: 100;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .slidePanel {
-  background-color: #fff; /* 배경색 지정 */
-  overflow-x: auto; /* 가로 스크롤 활성화 */
-  white-space: nowrap; /* 내용을 가로로 배열 */
-  position: absolute;
-  top: 400px;
+  background-color: #fff;
+  /* 배경색 지정 */
+  overflow: hidden;
+  place-items: center;
+  white-space: nowrap;
+  /* 내용을 가로로 배열 */
+  position: relative;
+  /* top: 150px; */
   left: 0;
   right: 0;
   z-index: 103;
 }
 
 .itemsContainer {
-  display: flex; /* Flexbox를 사용하여 항목을 가로로 배열 */
-  overflow-x: auto; /* 컨테이너 내부에서 항목이 넘칠 경우 가로 스크롤 허용 */
+  display: flex;
+  /* Flexbox를 사용하여 항목을 가로로 배열 */
+  overflow: hidden;
+  /* 컨테이너 내부에서 항목이 넘칠 경우 가로 스크롤 허용 */
 }
 
+
 .item {
-  flex: 0 0 auto; /* 각 항목이 컨텐츠 크기에 맞게 유연하게 배열되도록 설정 */
-  margin-right: 20px; /* 항목 사이의 간격 */
+  display: flex;
+  flex: 0 0 auto;
+  /* 각 항목이 컨텐츠 크기에 맞게 유연하게 배열되도록 설정 */
+  align-items: center;
+  padding-top: 30px;
+  perspective: 100px;
+  animation: scroll 34s linear infinite;
+}
+
+.item:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(calc(-300px * 6));
+  }
+}
+
+
+.card {
+  width: 200px;
+  height: 270px;
+  margin-left: 120px;
+  transition: transform 1s;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #FFB3BA;
+}
+
+.card:hover {
+  transform: translateZ(18px);
+}
+
+.cardImg {
+  padding-top: 10px;
+  width: 100px;
+  /* left: -50%; */
+  /* transform: translateX(-50%); */
+  
+}
+.textBox{
+  text-align: center;
+  margin: auto;
 }
 </style>

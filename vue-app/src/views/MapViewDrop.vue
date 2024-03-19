@@ -14,7 +14,7 @@
           <div style="padding: 10px; cursor: pointer; border-bottom: 1px solid #ccc; background-color: lightpink;">
             <p><strong>Date:</strong> {{ value.date }}</p>
             <p><strong></strong> {{ value.title }}</p>
-            <p><strong>Store:</strong> {{ value.store }}</p>
+            <p><strong>Store:</strong> {{ value.store }}</p>  
           </div>
         </div>
         <!-- 다른 속성들도 필요한 경우 추가 -->
