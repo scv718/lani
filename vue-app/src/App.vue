@@ -1,10 +1,5 @@
 <template>
-  <nav>
-    <router-link to="/" class="mainBTN">LANI & JJINKO</router-link>
-    <span v-if="!isAboutPage"> | </span>
-    <router-link v-if="!isAboutPage" to="/about">Map</router-link>
-    <router-link v-if="!isAboutPage" to="/add">add</router-link>
-  </nav>
+
   <router-view/>
 </template>
 
@@ -19,6 +14,10 @@ export default {
 </script>
 
 <style>
+body, html{
+  min-height: 100%; 
+  margin: 0;
+}
 @font-face {
     font-family: 'iceJaram-Rg';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/iceJaram-Rg.woff2') format('woff2');

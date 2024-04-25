@@ -18,6 +18,7 @@ import com.lani.response.ResponseMapData;
 import com.lani.response.RestResponse;
 import com.lani.service.DataService;
 import com.lani.service.FileService;
+import com.lani.service.RedisDataService;
 import com.lani.util.CheckUtil;
 
 @RestController
@@ -30,6 +31,10 @@ public class DataController {
 
 	@Autowired
 	FileService fileServie;
+
+	@Autowired
+	RedisDataService redisDataService;
+
 //	@Autowired
 //	CheckUtil checkUtil;
 
@@ -58,7 +63,8 @@ public class DataController {
 	public List<ResponseMapData> map() {
 
 
-		return dataService.sendMapData();
+//		return dataService.sendMapData();
+		return redisDataService.sendMapData();
 	}
 
 

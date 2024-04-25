@@ -16,6 +16,12 @@
   
         <input type="text" placeholder="제목 입력" v-model="title">
         <input type="file" @change="onFileChange" accept="image/*">
+
+        <label>
+        <input type="checkbox" v-model="main_img">
+        메인 이미지로 설정
+      </label>
+      
         <button @click="sendMapData">마커 추가하기</button>
         <!-- 여기에 팝업 내용을 추가하세요 -->
       </div>

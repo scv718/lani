@@ -14,9 +14,6 @@ public interface MapDataDao {
 	public void insertMapData(RequestMapData data);
 
 
-	//////////////////
-
-
 	/*
 	 * 전체 뿌려주는 쿼리
 	 */

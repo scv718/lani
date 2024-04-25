@@ -11,6 +11,7 @@ export default {
       title: '',
       store: '',
       file: '',
+      main_img: false,
       jsonData : {},
     };
   },
@@ -34,6 +35,7 @@ export default {
           point_y: y,
           title: this.title,
           store: this.store,
+          main_img: this.main_img
         },
     
         formData.append('data', JSON.stringify(this.jsonData));

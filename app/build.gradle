@@ -29,7 +29,13 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'org.springframework:spring-core:5.3.14'
+    // 버전출동로 인한 주석 어처피 spring boot에서 자동적으로 의존성 주입해줌
+    // implementation 'org.springframework:spring-core:5.3.14'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
 }
 

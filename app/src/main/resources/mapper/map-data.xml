@@ -12,12 +12,12 @@
 	</select>
 
 	<select id ="selectListData" resultType = "com.lani.response.ResponseMapData">
-		select date, title, store ,point_x, point_y from date_data
+		select date, title, store,point_x, point_y, main_img, CONCAT(date, '_', store, '.jpg') AS filePath from date_data
 	</select>
 
 	<insert id="insertMapData">
-	    INSERT INTO date_data (date, title, store, point_x, point_y)
-	    VALUES (#{date} , #{title},  #{store}, #{point_x},#{point_y})
+	    INSERT INTO date_data (date, title, store, point_x, point_y, main_img)
+	    VALUES (#{date} , #{title},  #{store}, #{point_x},#{point_y}, #{main_img})
 	</insert>
 
 

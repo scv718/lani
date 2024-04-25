@@ -1,20 +1,18 @@
 <template>
-  <div style="display : grid">
-    <!-- 네이버 지도 표시 영역 -->
-    <div id="map" class="map"></div>
-
-    <!-- 가로 슬라이드 패널 -->
-    <div class="slidePanel">
-      <div class="itemsContainer">
-        <div v-for="(item, date) in listData" :key="date" class="item">
-          <div v-for="(value, index) in item" :key="index" class="card" @mouseenter="pauseAnimation"
-            @mouseleave="resumeAnimation">
-            <img :src="getImagePath(value.filePath)" alt="Image" class="cardImg">
-            <div class = 'textBox'>
-            <p><strong></strong> {{ value.title }}</p>
-            <p><strong></strong> {{ value.date }}</p>
-            <p><strong></strong> {{ value.store }}</p>
-          </div>
+  <div class="container">
+    <div class="main_container">
+      <div class="card-container"> <!-- 1. 카드 컨테이너 추가 -->
+        <div v-for="(item, date) in listData" :key="date">
+          <div v-for="(value, index) in item" :key="index">
+            <!-- main_img가 true인 경우에만 backdrop-item 클래스가 적용된 div 요소를 렌더링 -->
+            <div v-if="value.main_img === 'true'" class="backdrop-item">
+              <img :src="getImagePath(value.filePath)" alt="Image" class="cardImg">
+              <div class='textBox'>
+                <p><strong></strong> {{ value.title }}</p>
+                <p><strong></strong> {{ value.date }}</p>
+                <p><strong></strong> {{ value.store }}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -23,54 +21,22 @@
 </template>
 
 <script>
-import axios from 'axios';
+ import axios from 'axios';
 
 export default {
   data() {
     return {
-      map: null,
-      polylines: {}, // 날짜별 polyline 객체를 저장할 객체
-      markers: {}, // 날짜별로 마커 객체를 저장할 객체
       listData: {},
-      showDropdown: false,
     };
   },
   mounted() {
-    this.initMap();
     this.fetchAndPlaceMarkers();
   },
   methods: {
-    pauseAnimation() {
-      // '.item' 클래스를 가진 모든 요소 선택
-      const items = document.querySelectorAll('.item');
-      // 각 항목의 애니메이션 일시 중지
-      items.forEach(item => {
-        item.style.animationPlayState = 'paused';
-      });
-    },
-    resumeAnimation() {
-      // '.item' 클래스를 가진 모든 요소 선택
-      const items = document.querySelectorAll('.item');
-      // 각 항목의 애니메이션 재생
-      items.forEach(item => {
-        item.style.animationPlayState = 'running';
-      });
-    },
     getImagePath(path) {
       // 이미지 파일명을 동적으로 생성하여 반환합니다.
       // return `C:\\workspace\\lani\\vue-app\\public\\img\\${path}`;
       return `/img/${path}`;
-    },
-    toggleDropdown() {
-      this.showDropdown = !this.showDropdown;
-      console.log(this.listData)
-    },
-    initMap() {
-      const mapOptions = {
-        center: new naver.maps.LatLng(37.5046658, 126.9387444),
-        zoom: 10,
-      };
-      this.map = new naver.maps.Map('map', mapOptions);
     },
     async fetchAndPlaceMarkers() {
       try {
@@ -79,68 +45,22 @@ export default {
 
         list.forEach((item) => {
           const date = item.date; // 'YYYY.MM.DD' 형식 가정
-          if (!this.markers[date]) {
-            this.markers[date] = [];
-          }
+   
           if (!this.listData[date]) {
             this.listData[date] = [];
           }
 
-          const marker = new naver.maps.Marker({
-            position: new naver.maps.LatLng(item.point_y, item.point_x),
-            map: this.map,
-          });
+          console.log(item);
 
-          this.markers[date].push(marker);
           this.listData[date].push(item);
 
-          // 마커 클릭 이벤트 리스너 추가
-          naver.maps.Event.addListener(marker, 'click', () => {
-            if (this.polylines[date]) {
-              this.togglePolylineVisibility(date);
-            } else {
-              this.fetchAndDrawPolylineForDate(date);
-            }
-          });
         });
       } catch (error) {
         console.error('Error fetching markers:', error);
       }
-    },
-    async fetchAndDrawPolylineForDate(date) {
-      // 날짜별로 필터링된 데이터가 필요
-      // 이 예시에서는 모든 데이터를 이미 받아왔으므로, 서버에 다시 요청하지 않고 클라이언트 측에서 필터링
-      const locations = this.filterLocationsByDate(date);
-
-      const path = locations.map(location => new naver.maps.LatLng(location.point_y, location.point_x));
-
-      const polyline = new naver.maps.Polyline({
-        map: this.map,
-        path: path,
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 3,
-      });
-
-      this.polylines[date] = polyline;
-    },
-    filterLocationsByDate(date) {
-      // `this.markers`에서 해당 날짜의 마커들을 찾아 위치 데이터를 반환
-      return this.markers[date].map(marker => ({
-        point_y: marker.getPosition().lat(),
-        point_x: marker.getPosition().lng(),
-      }));
-    },
-    togglePolylineVisibility(date) {
-      const polyline = this.polylines[date];
-      if (polyline) {
-        const isVisible = polyline.getMap();
-        polyline.setMap(isVisible ? null : this.map);
-      }
-    },
+    }
   },
-};
-
+}
 
 </script>
 
@@ -149,77 +69,54 @@ body {
   height: 100%;
 }
 
-.map {
-  width: 60%;
-  height: 330px;
+.container {
   position: relative;
-  z-index: 100;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.slidePanel {
+  min-height: 100vh;
+  /* 이 부분을 추가합니다 */
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  /* 자식 요소들을 세로로 정렬합니다 */
   background-color: #fff;
-  /* 배경색 지정 */
-  overflow: hidden;
-  place-items: center;
-  white-space: nowrap;
-  /* 내용을 가로로 배열 */
-  position: relative;
-  /* top: 150px; */
-  left: 0;
-  right: 0;
-  z-index: 103;
+  border-bottom: 1px solid #e2e8f0;
+  --tw-bg-opacity: 1;
+  /* background-color: #800020; */
+  background-color: rgba(31, 41, 55, var(--tw-bg-opacity));
 }
 
-.itemsContainer {
+.main_container{
   display: flex;
-  /* Flexbox를 사용하여 항목을 가로로 배열 */
-  overflow: hidden;
-  /* 컨테이너 내부에서 항목이 넘칠 경우 가로 스크롤 허용 */
+  position: absolute;
+  width: 80%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding-left: 5%;
+}
+
+.card-container {
+  display: flex; /* 가로로 요소를 나란히 정렬합니다 */
+  flex-wrap: wrap; /* 화면 너비를 벗어나면 자동으로 줄바꿈합니다 */
+  justify-content: space-around; /* 요소들을 가로 방향으로 중앙 정렬합니다 */
+  margin-bottom: 20px; /* 카드 간의 간격을 조절합니다 */
 }
 
 
-.item {
-  display: flex;
-  flex: 0 0 auto;
-  /* 각 항목이 컨텐츠 크기에 맞게 유연하게 배열되도록 설정 */
-  align-items: center;
-  padding-top: 30px;
-  perspective: 100px;
-  animation: scroll 34s linear infinite;
+.backdrop-item {
+    margin-top: 20px;
+    margin-right: 100px;
+    width: 260px;
+    height: 300px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, .36); /* 밝게 보이도록 배경색 추가 */
+    border-radius: 30px; /* 둥근 테두리 */
+    box-shadow: 0 6px 20px -15px #000; /* 그림자 효과 */
+    border-width: 1px 1px 0 0; /* 입체감 흰색 테두리 */
+    border-color: #fff;
+    border-style: solid;
 }
-
-.item:hover {
-  animation-play-state: paused;
-}
-
-@keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(calc(-300px * 6));
-  }
-}
-
-
-.card {
-  width: 200px;
-  height: 270px;
-  margin-left: 120px;
-  transition: transform 1s;
-  border-radius: 10px;
-  overflow: hidden;
-  background-color: #FFB3BA;
-}
-
-.card:hover {
-  transform: translateZ(18px);
-}
-
 .cardImg {
   padding-top: 10px;
   width: 100px;
@@ -227,8 +124,13 @@ body {
   /* transform: translateX(-50%); */
   
 }
+
 .textBox{
+  font-size: 20px;
   text-align: center;
   margin: auto;
 }
+
+
+
 </style>

@@ -4,8 +4,8 @@ import HomeView from '../views/HomeView.vue'
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'candleView',
+    component: () => import(/* webpackChunkName: "about" */ '../views/candleView.vue')
   },
   {
     path: '/about',
@@ -19,6 +19,16 @@ const routes = [
     path: '/add',
     name: 'add',
     component: () => import(/* webpackChunkName: "add" */ '../views/ManagerView.vue')
+  },
+  {
+    path: '/candle',
+    name: 'candle',
+    component: () => import(/* webpackChunkName: "add" */ '../views/candleView.vue')
+  },
+  {
+    path: '/main',
+    name: 'main',
+    component: () => import(/* webpackChunkName: "add" */ '../views/HomeView.vue')
   }
 ]
 

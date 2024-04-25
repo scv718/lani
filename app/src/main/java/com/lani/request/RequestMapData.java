@@ -14,5 +14,6 @@ public class RequestMapData {
 	String point_x;
 	String point_y;
 //	MultipartFile file;
+	String main_img;
 
 }

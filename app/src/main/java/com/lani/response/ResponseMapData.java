@@ -1,19 +1,21 @@
 package com.lani.response;
 
-import org.springframework.web.multipart.MultipartFile;
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ResponseMapData {
 
+
 	String date;
-	String location;
 	String title;
 	String store;
 	String point_x;
 	String point_y;
 	String filePath;
-	MultipartFile file;
+	String main_img;
 
 }

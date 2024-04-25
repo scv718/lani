@@ -23,17 +23,15 @@ public class CheckUtil {
         }
         return classNames;
     }
-	
+
 	public static boolean nullCheck(Object value) {
-		
+
 		Class<?> clazz = value.getClass();
-		
+
 		for(Field field : clazz.getDeclaredFields()) {
 			try{
 				field.setAccessible(true);
-				System.out.println(field.get(value));
 				if(field.get(value) == null) {
-					System.out.println("실패");
 					return false;
 				}
 			}catch (Exception e) {
@@ -43,17 +41,17 @@ public class CheckUtil {
 		}
 		return true;
 	}
-	
-	
+
+
 	public static boolean parameterCheck(Object value) {
-		
+
 		List<String> classNames = getClassNames();
 
 		for (String className : classNames) {
             try {
                 Class<?> clazz = Class.forName(className);
                 if (clazz.isInstance(value)) {
-                	
+
                     return nullCheck(value);
                 }
             } catch (Exception e) {
@@ -61,8 +59,8 @@ public class CheckUtil {
                 return false;
             }
         }
-		
+
 		return false;
-		
+
 	}
 }
