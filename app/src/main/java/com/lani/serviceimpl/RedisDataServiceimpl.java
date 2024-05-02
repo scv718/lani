@@ -1,14 +1,13 @@
 package com.lani.serviceimpl;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import com.lani.common.KeyEnum;
 import com.lani.dao.MapDataDao;
 import com.lani.response.ResponseMapData;
 import com.lani.service.RedisDataService;
@@ -26,22 +25,41 @@ public class RedisDataServiceimpl implements RedisDataService {
 //    private DataServiceimpl dataService;
 
 
-    @Cacheable(cacheNames = "main_data")
+	@Cacheable(cacheNames = "main_data", key = "#root.method.name")
 	public List<ResponseMapData> sendMapData() {
-		redisService.convertAndSend("select", "select main");
+	    List<ResponseMapData> data = dataDao.selectListData();
+	    if (data == null || data.isEmpty()) {
+	        return new ArrayList<>();
+	    }
+	    return data;
+	}
 
-		List<ResponseMapData> cachedData = redisService.getList(KeyEnum.MAP_DATA_KEY.value());
-
-		if (cachedData == null || cachedData.isEmpty()) {
-			List<ResponseMapData> listData = dataDao.selectListData();
-			redisService.setList(KeyEnum.MAP_DATA_KEY.value(), listData, Duration.ofMinutes(30)); // Example duration
-			return listData;
-		}
-
-        return cachedData;
+	// redisService 로 직접적인 set 없이 바로 어노테이션으로 캐시 등록
+	@CachePut(cacheNames = "main_data", key = "#root.method.name")
+	public List<ResponseMapData> updateMapData() {
+	    List<ResponseMapData> updatedData = dataDao.selectListData();
+	    return updatedData;
 	}
 
 
+
+	// 기존 잔재 구형방식
+//    @Cacheable(cacheNames = "main_data")
+//	public List<ResponseMapData> sendMapData() {
+//		redisService.convertAndSend("select", "select main");
+//
+//		List<ResponseMapData> cachedData = redisService.getList(KeyEnum.MAP_DATA_KEY.value());
+//
+//		if (cachedData == null || cachedData.isEmpty()) {
+//			List<ResponseMapData> listData = dataDao.selectListData();
+//			redisService.setList(KeyEnum.MAP_DATA_KEY.value(), listData, Duration.ofMinutes(30)); // Example duration
+//			return listData;
+//		}
+//
+//        return cachedData;
+//	}
+//
+//
 
 
 

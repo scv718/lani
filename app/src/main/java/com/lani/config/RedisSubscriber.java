@@ -17,18 +17,22 @@ public class RedisSubscriber implements MessageListener {
         this.redisTemplate = redisTemplate;
     }
 
-    public void subscribe(String channel) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(redisTemplate.getConnectionFactory());
-        container.addMessageListener(this, new ChannelTopic(channel));
-        container.afterPropertiesSet();
-        container.start();
-    }
-
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        String channel = new String(message.getChannel());
-        String msg = new String(message.getBody());
-        System.out.println("Received message from channel " + channel + ": " + msg);
+
+    	String cha = new String(message.getChannel());
+
+        if(cha.equals("movie")) {
+        	String msg = new String(message.getBody());
+
+        	if (msg.equals("insert")) {
+
+        	}
+
+        	if (msg.equals("update")) {
+
+        	}
+
+        }
     }
 }

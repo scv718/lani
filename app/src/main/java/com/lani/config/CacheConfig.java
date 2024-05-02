@@ -7,6 +7,7 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 
 import java.time.Duration;
@@ -19,6 +20,7 @@ public class CacheConfig {
     public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
         // Redis 캐시의 직렬화 설정을 위한 serializer
         GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer();
+
 
         // Redis 캐시 설정
         RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()

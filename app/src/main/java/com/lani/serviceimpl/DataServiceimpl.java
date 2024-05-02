@@ -71,7 +71,7 @@ public class DataServiceimpl implements DataService {
 		dataDao.insertMapData(mapData);
 
 		redisService.convertAndSend("insert", "insert data");
-		eventPublisher.publishEvent(new DatabaseInsertEvent(this));
+		eventPublisher.publishEvent(new DatabaseInsertEvent(this, "date_data"));
 	}
 
 }
