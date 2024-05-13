@@ -1,136 +1,294 @@
 <template>
-  <div class="container">
-    <div class="main_container">
-      <div class="card-container"> <!-- 1. 카드 컨테이너 추가 -->
-        <div v-for="(item, date) in listData" :key="date">
-          <div v-for="(value, index) in item" :key="index">
-            <!-- main_img가 true인 경우에만 backdrop-item 클래스가 적용된 div 요소를 렌더링 -->
-            <div v-if="value.main_img === 'true'" class="backdrop-item">
-              <img :src="getImagePath(value.filePath)" alt="Image" class="cardImg">
-              <div class='textBox'>
-                <p><strong></strong> {{ value.title }}</p>
-                <p><strong></strong> {{ value.date }}</p>
-                <p><strong></strong> {{ value.store }}</p>
-              </div>
+    <div>
+        <div id="container">
+            <div id="toggleContainer">
+                <label>Carousel</label>
+                <div id="toggle" @click="toggleState3">
+                    <div id="outer3">
+                        <div id="slider3" :class="{ 'active': isSliderActive }"></div>
+                    </div>
+                    <label>Tiles</label>
+                </div>
             </div>
-          </div>
+            <div id="galleryView" v-show="showGallery">
+                <div id="galleryContainer">
+                    <div id="leftView" @click="scrollLeft">
+                        <img :src="getImagePath(imgObject[prevImg])" alt="Image" class="cardImg">
+                    </div>
+
+                    <div id="mainView" @click="openModal">
+                        <img :src="getImagePath(imgObject[mainImg])" alt="Image" class="cardImg">
+                    </div>
+                    <div v-if="isModalOpen" class="modal">
+                        <OtherComponent />
+                        <button @click="closeModal">Close Modal</button>
+                    </div>
+                    <!-- </a> -->
+                    <div id="rightView" @click="scrollRight">
+                        <img :src="getImagePath(imgObject[nextImg])" alt="Image" class="cardImg">
+                    </div>
+
+                </div>
+            </div>
+            <div id="tilesView" :style="{ display: showTiles ? 'flex' : 'none' }">
+                <div id="tilesContainer">
+                    <div v-for="(item, date) in listData" :key="date">
+                        <div v-for="(value, index) in item" :key="index">
+                            <div v-if="value.main_img === 'true'" class="tileItem">
+                                <img :src="getImagePath(value.filePath)" alt="Image" class="cardImg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
-<script>
- import axios from 'axios';
 
-export default {
-  data() {
-    return {
-      listData: {},
-    };
-  },
-  mounted() {
-    this.fetchAndPlaceMarkers();
-  },
-  methods: {
-    getImagePath(path) {
-      // 이미지 파일명을 동적으로 생성하여 반환합니다.
-      // return `C:\\workspace\\lani\\vue-app\\public\\img\\${path}`;
-      return `/img/${path}`;
-    },
-    async fetchAndPlaceMarkers() {
-      try {
-        const response = await axios.get('http://localhost:8099/map');
-        const list = response.data;
-
-        list.forEach((item) => {
-          const date = item.date; // 'YYYY.MM.DD' 형식 가정
-   
-          if (!this.listData[date]) {
-            this.listData[date] = [];
-          }
-
-          console.log(item);
-
-          this.listData[date].push(item);
-
-        });
-      } catch (error) {
-        console.error('Error fetching markers:', error);
-      }
-    }
-  },
-}
-
-</script>
-
+<script src="../js/MapViewScript"></script>
 <style scoped>
+*,
+html,
 body {
-  height: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
-.container {
-  position: relative;
-  min-height: 100vh;
-  /* 이 부분을 추가합니다 */
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  /* 자식 요소들을 세로로 정렬합니다 */
-  background-color: #fff;
-  border-bottom: 1px solid #e2e8f0;
-  --tw-bg-opacity: 1;
-  /* background-color: #800020; */
-  background-color: rgba(31, 41, 55, var(--tw-bg-opacity));
+#toggleContainer label {
+    text-align: center;
+    width: 70px;
 }
 
-.main_container{
-  display: flex;
-  position: absolute;
-  width: 80%;
-  height: 100%;
+#container {
+    min-height: 640px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#toggleContainer {
+    min-height: 100px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: auto;
+    position: absolute;
+    margin-bottom: 14px;
+}
+
+#tilesContainer {
+    min-height: 90vh;
+    width: 100vw;
+    margin-top: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    align-content: center;
+
+}
+
+.modal {
+  width: 60%;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding-left: 5%;
+  background-color: white;
+  padding: 20px;
+  z-index: 9999;
 }
 
-.card-container {
-  display: flex; /* 가로로 요소를 나란히 정렬합니다 */
-  flex-wrap: wrap; /* 화면 너비를 벗어나면 자동으로 줄바꿈합니다 */
-  justify-content: space-around; /* 요소들을 가로 방향으로 중앙 정렬합니다 */
-  margin-bottom: 20px; /* 카드 간의 간격을 조절합니다 */
+.tileItem {
+    position: relative;
+    overflow: hidden;
+    width: 250px;
+    height: 250px;
+    margin: 5px;
+    border-radius: 5px;
+
+    transition: all 0.5s ease;
 }
 
-
-.backdrop-item {
-    margin-top: 20px;
-    margin-right: 100px;
-    width: 260px;
-    height: 300px;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(20px);
-    background-color: rgba(255, 255, 255, .36); /* 밝게 보이도록 배경색 추가 */
-    border-radius: 30px; /* 둥근 테두리 */
-    box-shadow: 0 6px 20px -15px #000; /* 그림자 효과 */
-    border-width: 1px 1px 0 0; /* 입체감 흰색 테두리 */
-    border-color: #fff;
-    border-style: solid;
+.tileItem:hover {
+    transform: scale(1.05);
+    transition: all 0.5s ease;
 }
+
+#galleryContainer {
+    height: 500px;
+    width: 100%;
+    background: transparent;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    position: relative;
+}
+
+#toggle {
+    height: 10vh;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    margin: 10px;
+}
+
+#tilesView {
+
+    min-height: 640px;
+    width: 100%;
+    background: rgb(246, 210, 106);
+    background: linear-gradient(111deg, rgba(246, 210, 106, 1) 0%, rgba(255, 159, 0, 1) 52%, rgba(251, 197, 100, 1) 100%);
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#galleryView {
+    min-height: 640px;
+    width: 100%;
+    background: rgb(246, 210, 106);
+    background: linear-gradient(111deg, rgba(246, 210, 106, 1) 0%, rgba(255, 159, 0, 1) 52%, rgba(251, 197, 100, 1) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#outer3 {
+    width: 100px;
+    height: 40px;
+    background-color: white;
+    margin: 10px auto;
+    border-radius: 3px;
+    border: 2px solid white;
+    transition: all 0.5s;
+}
+
+#slider3 {
+    height: 36px;
+    width: 46px;
+    background-color: orange;
+    border-radius: 3px;
+    transition: all 0.5s;
+}
+
+#slider3.active {
+    -webkit-transform: translatex(50px);
+    -ms-transform: translatex(50px);
+    -o-transform: translatex(50px);
+    transform: translatex(50px);
+    transition: all 0.5s;
+    background-color: orange;
+}
+
+#outer3.outerActive {
+    background-color: white;
+    border: 2px solid white;
+    transition: all 0.5s;
+}
+
 .cardImg {
-  padding-top: 10px;
-  width: 100px;
-  /* left: -50%; */
-  /* transform: translateX(-50%); */
-  
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    max-height: 100%;
 }
 
-.textBox{
-  font-size: 20px;
-  text-align: center;
-  margin: auto;
+#mainView {
+    position: relative;
+    background-size: contain;
+    height: 450px;
+    width: 450px;
+    border-radius: 5px;
+    background-color: #eb9100;
+    margin-left: 10px;
+    margin-right: 10px;
+    z-index: 1;
+    transition: all 1s;
 }
 
+#mainView:hover {
+    transform: scale(1.2);
+    transition: all 1s;
+}
 
+#leftView {
+    position: relative;
+    height: 400px;
+    width: 200px;
+    opacity: 0.5;
+    border-radius: 5px;
+    transform: skewy(5deg);
+    transform-origin: top right;
+    background-color: #eb9100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 1s;
+}
 
+#leftView:hover {
+    opacity: 1;
+    transition: all 1s;
+}
+
+#rightView {
+    position: relative;
+    background-size: contain;
+    height: 400px;
+    width: 200px;
+    opacity: 0.5;
+    border-radius: 5px;
+    transform: skewy(-5deg);
+    transform-origin: top left;
+    background-color: #eb9100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 1s;
+}
+
+#rightView:hover {
+    opacity: 1;
+    transition: all 1s;
+}
+
+.navBtns {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: none;
+    position: absolute;
+    opacity: 0.8;
+    background-color: transparent;
+    cursor: pointer;
+    color: white;
+}
+
+.navBtns:hover {
+    opacity: 1;
+    transition: all 1s;
+    background-color: #eb9100;
+}
+
+#navLeft {
+    left: 50px;
+}
+
+#navRight {
+    right: 50px;
+}
+
+#linkTag {
+    cursor: pointer;
+    z-index: 1;
+    box-sizing: border-box;
+}
 </style>
