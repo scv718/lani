@@ -2,25 +2,7 @@
   <div>
 
   <div style="display : grid">
-    <!-- 네이버 지도 표시 영역 -->
     <div id="map" class="map"></div>
-
-    <!-- 가로 슬라이드 패널 -->
-    <!-- <div class="slidePanel">
-      <div class="itemsContainer">
-        <div v-for="(item, date) in listData" :key="date" class="item">
-          <div v-for="(value, index) in item" :key="index" class="card" @mouseenter="pauseAnimation"
-            @mouseleave="resumeAnimation">
-            <img :src="getImagePath(value.filePath)" alt="Image" class="cardImg">
-            <div class = 'textBox'>
-            <p><strong></strong> {{ value.title }}</p>
-            <p><strong></strong> {{ value.date }}</p>
-            <p><strong></strong> {{ value.store }}</p>
-          </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
   </div>
 </div>
 </template>

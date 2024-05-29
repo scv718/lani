@@ -13,11 +13,11 @@
             <div id="galleryView" v-show="showGallery">
                 <div id="galleryContainer">
                     <div id="leftView" @click="scrollLeft">
-                        <img :src="getImagePath(imgObject[prevImg])" alt="Image" class="cardImg">
+                        <!-- <img :src="getImagePath(imgObject[prevImg])" alt="Image" class="cardImg"> -->
                     </div>
 
                     <div id="mainView" @click="openModal">
-                        <img :src="getImagePath(imgObject[mainImg])" alt="Image" class="cardImg">
+                        <!-- <img :src="getImagePath(imgObject[mainImg])" alt="Image" class="cardImg"> -->
                     </div>
                     <div v-if="isModalOpen" class="modal">
                         <OtherComponent />
@@ -25,7 +25,7 @@
                     </div>
                     <!-- </a> -->
                     <div id="rightView" @click="scrollRight">
-                        <img :src="getImagePath(imgObject[nextImg])" alt="Image" class="cardImg">
+                        <!-- <img :src="getImagePath(imgObject[nextImg])" alt="Image" class="cardImg"> -->
                     </div>
 
                 </div>
@@ -35,7 +35,7 @@
                     <div v-for="(item, date) in listData" :key="date">
                         <div v-for="(value, index) in item" :key="index">
                             <div v-if="value.main_img === 'true'" class="tileItem">
-                                <img :src="getImagePath(value.filePath)" alt="Image" class="cardImg">
+                                <!-- <img :src="getImagePath(value.filePath)" alt="Image" class="cardImg"> -->
                             </div>
                         </div>
                     </div>
@@ -139,7 +139,7 @@ body {
 
 #tilesView {
 
-    min-height: 640px;
+    min-height: 100vh;
     width: 100%;
     background: rgb(246, 210, 106);
     background: linear-gradient(111deg, rgba(246, 210, 106, 1) 0%, rgba(255, 159, 0, 1) 52%, rgba(251, 197, 100, 1) 100%);
@@ -150,7 +150,7 @@ body {
 }
 
 #galleryView {
-    min-height: 640px;
+    min-height: 100vh;
     width: 100%;
     background: rgb(246, 210, 106);
     background: linear-gradient(111deg, rgba(246, 210, 106, 1) 0%, rgba(255, 159, 0, 1) 52%, rgba(251, 197, 100, 1) 100%);

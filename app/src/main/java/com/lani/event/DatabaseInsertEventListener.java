@@ -22,7 +22,7 @@ public class DatabaseInsertEventListener implements ApplicationListener<Database
     @Override
     public void onApplicationEvent(DatabaseInsertEvent event) {
     	 if ("date_data".equals(event.getTableName())) {
-             cacheService.evictCache("date_data");
+             cacheService.evictCache("main_data");
              System.err.println("관련 캐시 삭제 수행");
          }
     }
